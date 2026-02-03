@@ -9,8 +9,7 @@ def worker(req: func.HttpRequest):
     start = time.time()
     location = req.params.get("location", "UNKNOWN")
 
-    simulated_latency = random.uniform(80, 120)
-    time.sleep(simulated_latency / 1000)
+    time.sleep(1000)
 
     latency = (time.time() - start) * 1000
 
