@@ -1,0 +1,12 @@
+[
+  {
+    "provider": "azure",
+    "total_latency_ms": 120,
+    "cache_used": true
+  },
+  {
+    "provider": "aws",
+    "total_latency_ms": 180,
+    "cache_used": false
+  }
+]

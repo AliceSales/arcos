@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <main>
+    <h1>TCC - Alice</h1>
+    <div class="charts">
+      <div class="chart">
+        <div class="title-chart">
+          <h2>ARCOS – Latência por Provedor</h2>
+        </div>
+        <canvas id="latencyChart"></canvas>
+      </div>
+      <div class="chart">
+        <div class="title-chart">
+          <h2>Cache Hit vs Miss</h2>
+        </div>
+        <canvas id="cacheChart"></canvas>
+      </div>
+    </div>
+  </main>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+fetch("data.json")
+  .then(res => res.json())
+  .then(data => {
+
+    const azureLatency = data
+      .filter(d => d.provider === "azure")
+      .map(d => d.total_latency_ms);
+
+    const awsLatency = data
+      .filter(d => d.provider === "aws")
+      .map(d => d.total_latency_ms);
+
+    new Chart(document.getElementById("latencyChart"), {
+      type: "bar",
+      data: {
+        labels: ["Execuções"],
+        datasets: [
+          {
+            label: "Azure",
+            data: [azureLatency.reduce((a, b) => a + b, 0) / azureLatency.length],
+            backgroundColor: "#5E81F4"
+          },
+          {
+            label: "AWS",
+            data: [awsLatency.reduce((a, b) => a + b, 0) / awsLatency.length],
+            backgroundColor: "#9698D6"
+          }
+        ]
+      }
+    });
+
+    const hits = data.filter(d => d.cache_used).length;
+    const misses = data.length - hits;
+
+    new Chart(document.getElementById("cacheChart"), {
+      type: "pie",
+      data: {
+        labels: ["Cache Hit", "Cache Miss"],
+        datasets: [{
+          data: [hits, misses],
+          backgroundColor: ["#7CE7AC", "#FF808B"]
+        }]
+      }
+    });
+});
+</script>
+
+</body>
+</html>
